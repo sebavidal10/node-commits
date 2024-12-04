@@ -12,7 +12,7 @@ function makeCommit() {
     }
     exec(`git commit -m "${commitMessage}"`, (err, stdout, stderr) => {
       if (err) {
-        console.error(`Error al hacer commit: ${stderr}`);
+        console.error(`Error al hacer commit: ${stderr}`, err);
         return;
       }
       console.log(`Commit realizado: ${commitMessage}`);
