@@ -3,11 +3,11 @@ const fs = require('fs');
 const path = require('path');
 
 // Ruta al archivo de texto plano
-const filePath = path.join(__dirname, 'autoCommit.txt');
+const filePath = path.join(__dirname, 'document.txt');
 
 // Función para hacer un commit y push
 function makeCommitAndPush() {
-  const commitMessage = `Commit automático - ${new Date().toISOString()}`;
+  const commitMessage = `Update document - ${new Date().toISOString()}`;
 
   // Modificar el archivo de texto para forzar un cambio
   const content = `Último commit realizado a las: ${new Date().toISOString()}\n`;
@@ -46,4 +46,4 @@ function makeCommitAndPush() {
 }
 
 // Ejecutar cada 1 minuto (60000 ms)
-setInterval(makeCommitAndPush, 10000);
+setInterval(makeCommitAndPush, 3000);
