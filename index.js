@@ -1,26 +1,49 @@
 const { exec } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
-// Función para hacer un commit
-function makeCommit() {
+// Ruta al archivo de texto plano
+const filePath = path.join(__dirname, 'autoCommit.txt');
+
+// Función para hacer un commit y push
+function makeCommitAndPush() {
   const commitMessage = `Commit automático - ${new Date().toISOString()}`;
 
-  // Ejecutar el comando Git para agregar cambios y hacer commit
-  exec('git add .', (err, stdout, stderr) => {
+  // Modificar el archivo de texto para forzar un cambio
+  const content = `Último commit realizado a las: ${new Date().toISOString()}\n`;
+  fs.appendFile(filePath, content, (err) => {
     if (err) {
-      console.error(`Error al agregar archivos: ${stderr}`);
+      console.error(`Error al modificar el archivo: ${err}`);
       return;
     }
-    exec(`git commit -m "${commitMessage}"`, (err, stdout, stderr) => {
+
+    console.log(`Archivo modificado: ${filePath}`);
+
+    // Ejecutar el comando Git para agregar cambios y hacer commit
+    exec('git add .', (err, stdout, stderr) => {
       if (err) {
-        console.error(`Error al hacer commit: ${stderr}`, err);
+        console.error(`Error al agregar archivos: ${stderr}`);
         return;
       }
-      console.log(`Commit realizado: ${commitMessage}`);
-      // Puedes hacer un push si lo deseas:
-      // exec('git push origin main', (err, stdout, stderr) => { ... });
+      exec(`git commit -m "${commitMessage}"`, (err, stdout, stderr) => {
+        if (err) {
+          console.error(`Error al hacer commit: ${stderr || err}`);
+          return;
+        }
+        console.log(`Commit realizado: ${commitMessage}`);
+
+        // Hacer push al repositorio remoto
+        exec('git push origin main', (err, stdout, stderr) => {
+          if (err) {
+            console.error(`Error al hacer push: ${stderr || err}`);
+            return;
+          }
+          console.log('Push realizado al repositorio remoto.');
+        });
+      });
     });
   });
 }
 
 // Ejecutar cada 1 minuto (60000 ms)
-setInterval(makeCommit, 10000);
+setInterval(makeCommitAndPush, 10000);
