@@ -46,4 +46,4 @@ function makeCommitAndPush() {
 }
 
 // Ejecutar cada 1 minuto (60000 ms)
-setInterval(makeCommitAndPush, 3000);
+setInterval(makeCommitAndPush, 2000);
