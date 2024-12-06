@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a simple example of a Node.js application that uses the GitHub API to retrieve the commits of a repository.
+This project is a simple example of a Node.js application that make commits.
 
 ## Installation
 
