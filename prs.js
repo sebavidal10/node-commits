@@ -5,6 +5,7 @@ const path = require('path');
 const filePath = path.join(__dirname, 'document.txt');
 const BASE_BRANCH = 'main';
 let commitCounter = 0;
+let lastBranch = null; // Variable para almacenar la última rama creada
 
 // Función para generar el nombre de la rama con la fecha y hora
 function generateBranchName() {
@@ -45,7 +46,7 @@ async function automateGit() {
 
     // Agregar y hacer commit
     await runCommand('git add .', 'Archivos agregados.');
-    const commitMessage = `Automated Commit ${commitCounter}`;
+    const commitMessage = `Commit ${commitCounter}`;
     await runCommand(
       `git commit -m "${commitMessage}"`,
       `Commit realizado: ${commitMessage}`
@@ -54,18 +55,24 @@ async function automateGit() {
     // Crear una nueva rama cada 10 commits
     if (commitCounter % 10 === 0) {
       const newBranch = generateBranchName();
+      // Si hay una rama anterior, crear la nueva a partir de esa
+      const baseBranch = lastBranch || BASE_BRANCH;
+
       await runCommand(
-        `git checkout ${BASE_BRANCH}`,
-        `Cambiado a la rama base: ${BASE_BRANCH}`
+        `git checkout ${baseBranch}`,
+        `Cambiado a la rama base: ${baseBranch}`
       );
       await runCommand(
-        `git pull origin ${BASE_BRANCH}`,
+        `git pull origin ${baseBranch}`,
         'Actualizado desde la rama base.'
       );
       await runCommand(
         `git checkout -b ${newBranch}`,
         `Nueva rama creada: ${newBranch}`
       );
+
+      // Guardar la última rama creada
+      lastBranch = newBranch;
     }
 
     // Push a la rama actual
