@@ -20,4 +20,4 @@ To use the project, you need to run the following command:
 npm run start
 ```
 
-You must have your machine configured to run Node.js applications and the permissions to push the commits to the repository.
+You must have your machine configured to run Node.js applications and the permissions to push the commits to the repository.e
