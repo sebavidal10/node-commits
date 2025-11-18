@@ -87,4 +87,5 @@ async function automateGit() {
 }
 
 // Ejecutar cada 5 segundos (5000 ms)
+// setInterval(automateGit, 7200000); // 2 horas - SEGURO
 setInterval(automateGit, 5000);
