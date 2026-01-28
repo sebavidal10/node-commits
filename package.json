@@ -1,14 +1,20 @@
 {
   "name": "commits",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
-    "prs": "node prs.js",
+    "start": "node src/index.js",
+    "prs": "node src/prs.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "description": "Automatización de actividad en Git: Commits periódicos y creación dinámica de ramas con Node.js.",
+  "keywords": [
+    "git-automation",
+    "nodejs",
+    "github-activity",
+    "ci-cd-test",
+    "git-scripts"
+  ],
   "author": "",
   "license": "ISC"
 }
