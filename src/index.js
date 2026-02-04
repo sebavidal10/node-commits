@@ -47,6 +47,16 @@ async function makeCommitAndPush() {
   }
 }
 
-// Ejecutar inicialmente y luego cada 2 horas
-makeCommitAndPush();
-setInterval(makeCommitAndPush, 7200000);
+// Ejecutar inicialmente y luego según intervalo configurado (default: 2 horas)
+// Ejecutar inicialmente y luego según intervalo configurado (default: 2 horas)
+if (require.main === module) {
+  makeCommitAndPush();
+
+  const INTERVAL = process.env.GIT_REGULAR_INTERVAL || 7200000;
+  console.log(
+    `[START]: Automatización regular iniciada. Intervalo: ${INTERVAL}ms`,
+  );
+  setInterval(makeCommitAndPush, INTERVAL);
+}
+
+module.exports = { makeCommitAndPush };

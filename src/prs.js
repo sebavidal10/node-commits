@@ -8,7 +8,11 @@ const {
 
 const DATA_DIR = path.join(__dirname, '../data');
 const FILE_PATH = path.join(DATA_DIR, 'document.txt');
-const BASE_BRANCH = 'main';
+
+// Configuración dinámica
+const BASE_BRANCH = process.env.GIT_BASE_BRANCH || 'main';
+const BATCH_SIZE = process.env.GIT_PRS_BATCH || 10;
+const INTERVAL = process.env.GIT_INTERVAL || 5000;
 
 let commitCounter = 0;
 let lastBranch = null;
@@ -31,8 +35,8 @@ async function automateGit() {
       `Commit #${commitCounter} guardado.`,
     );
 
-    // Lógica de ramificación (cada 10 commits)
-    if (commitCounter % 10 === 0) {
+    // Lógica de ramificación (cada BATCH_SIZE commits)
+    if (commitCounter % BATCH_SIZE === 0) {
       const timestamp = new Date().getTime();
       const newBranch = `feature/auto-${timestamp}`;
       const sourceBranch = lastBranch || BASE_BRANCH;
@@ -65,8 +69,11 @@ async function automateGit() {
   }
 }
 
-// Ejecutar cada 5 segundos (intensivo) o 2 horas según se desee.
-// Por defecto dejamos el intervalo corto para demostración, pero configurable.
-const INTERVAL = process.env.GIT_INTERVAL || 5000;
-console.log(`[START]: Iniciando automatización intensiva cada ${INTERVAL}ms`);
-setInterval(automateGit, INTERVAL);
+if (require.main === module) {
+  console.log(
+    `[START]: Iniciando automatización intensiva cada ${INTERVAL}ms (Batch: ${BATCH_SIZE}, Base: ${BASE_BRANCH})`,
+  );
+  setInterval(automateGit, INTERVAL);
+}
+
+module.exports = { automateGit };
