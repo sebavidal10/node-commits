@@ -2,6 +2,8 @@
 
 **Automatización de actividad en Git: Commits periódicos y creación dinámica de ramas con Node.js.**
 
+Esta versión "Pro" incluye soporte seguro para credenciales y configuración flexible.
+
 ## 📋 Descripción
 
 `node-commits` es una suite de herramientas diseñada para generar actividad automatizada en repositorios de Git. Es ideal para validar configuraciones de CI/CD, probar scripts de integración, o mantener flujos de trabajo activos.
@@ -27,15 +29,34 @@ node-commits/
 ## 🛠️ Requisitos
 
 - [Node.js](https://nodejs.org/) instalado.
-- Permisos configurados para hacer `push` al repositorio remoto (SSH o Token).
+- **Configuración de credenciales** (ver abajo).
 
-## 🚀 Instalación y Uso
+## 🚀 Instalación y Configuración
 
 1.  Clona el repositorio.
 2.  Instala las dependencias:
     ```bash
     npm install
     ```
+3.  **Configuración "Pro" (Variables de Entorno)**:
+    - Copia el archivo de ejemplo:
+      ```bash
+      cp .env.example .env
+      ```
+    - Edita `.env` con tus credenciales.
+
+### Variables de Entorno soportadas
+
+| Variable              | Descripción                                                                      |
+| :-------------------- | :------------------------------------------------------------------------------- |
+| `GITHUB_TOKEN`        | Tu Personal Access Token (scope `repo`).                                         |
+| `GITHUB_USERNAME`     | Tu usuario de GitHub.                                                            |
+| `GIT_REPO_URL`        | URL HTTPS del repositorio (opcional, ej: `https://github.com/usuario/repo.git`). |
+| `GIT_COMMITTER_NAME`  | Inyecta `user.name` localmente.                                                  |
+| `GIT_COMMITTER_EMAIL` | Inyecta `user.email` localmente.                                                 |
+| `GIT_INTERVAL`        | Intervalo en ms para `npm run prs`.                                              |
+
+## 🕹️ Uso
 
 ### Automatización básica (`index.js`)
 
@@ -47,19 +68,19 @@ npm start
 
 ### Automatización intensiva (`prs.js`)
 
-Genera commits cada 5 segundos y crea una rama nueva cada 10 commits para simular un flujo de trabajo intensivo.
+Genera commits rápidos y crea una rama nueva cada 10 commits.
 
 ```bash
 npm run prs
 ```
 
-## 📄 Características de la Refactorización
+## 📄 Características
 
-- **Modularidad**: Lógica común extraída a `src/utils.js`.
-- **Organización**: Archivos de código y datos separados en directorios dedicados.
-- **Robustez**: Mejor manejo de errores y mensajes de consola claros.
+- **Seguridad**: Soporte para tokens de acceso personal vía `.env`.
+- **Portabilidad**: Configura la identidad de git (`user.name`/`email`) al vuelo sin afectar la configuración global de la máquina.
+- **Robustez**: Mejor manejo de errores y recuperación.
 
 ---
 
 > [!WARNING]
-> Ten en cuenta que el uso excesivo de scripts de automatización de commits puede ser detectado por plataformas como GitHub si se usa únicamente para inflar métricas. Úsalo con responsabilidad, principalmente para pruebas técnicas.
+> Ten en cuenta que el uso excesivo de scripts de automatización de commits puede ser detectado por plataformas como GitHub si se usa únicamente para inflar métricas. Úsalo con responsabilidad.

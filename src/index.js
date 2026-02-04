@@ -1,4 +1,10 @@
-const { runCommand, updateFile, path } = require('./utils');
+const {
+  runCommand,
+  updateFile,
+  path,
+  configureGitIdentity,
+  getAuthenticatedRemote,
+} = require('./utils');
 
 const DATA_DIR = path.join(__dirname, '../data');
 const FILE_PATH = path.join(DATA_DIR, 'document.txt');
@@ -15,6 +21,9 @@ async function makeCommitAndPush() {
   const content = `Registro a las: ${now}\n`;
 
   try {
+    // Configurar identidad si es necesario
+    await configureGitIdentity();
+
     updateFile(FILE_PATH, content);
 
     await runCommand('git add .', 'Archivos agregados al index.');
@@ -24,9 +33,12 @@ async function makeCommitAndPush() {
     );
 
     const branch = await runCommand('git branch --show-current');
+    const remote = await getAuthenticatedRemote();
+
+    // Si usas tokens, evita loguear la URL completa en el mensaje de éxito para seguridad básica
     await runCommand(
-      `git push origin ${branch}`,
-      `Push realizado a ${branch}.`,
+      `git push ${remote} ${branch}`,
+      `Push realizado a branch ${branch}.`,
     );
 
     console.log(`[INFO]: Ciclo completado a las ${now}. Próximo en 2 horas.`);

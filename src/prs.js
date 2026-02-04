@@ -1,4 +1,10 @@
-const { runCommand, updateFile, path } = require('./utils');
+const {
+  runCommand,
+  updateFile,
+  path,
+  configureGitIdentity,
+  getAuthenticatedRemote,
+} = require('./utils');
 
 const DATA_DIR = path.join(__dirname, '../data');
 const FILE_PATH = path.join(DATA_DIR, 'document.txt');
@@ -9,6 +15,9 @@ let lastBranch = null;
 
 async function automateGit() {
   try {
+    // Configurar identidad
+    await configureGitIdentity();
+
     commitCounter++;
     const now = new Date().toISOString();
     const content = `PR Sim - Commit ${commitCounter} - ${now}\n`;
@@ -30,8 +39,11 @@ async function automateGit() {
 
       console.log(`[FLOW]: Iniciando nueva rama desde ${sourceBranch}`);
 
+      const remote = await getAuthenticatedRemote();
+
       await runCommand(`git checkout ${sourceBranch}`);
-      await runCommand(`git pull origin ${sourceBranch}`).catch(() =>
+      // Usar remote autenticado para pull también si es necesario
+      await runCommand(`git pull ${remote} ${sourceBranch}`).catch(() =>
         console.log('Sin cambios remotos.'),
       );
       await runCommand(
@@ -43,9 +55,10 @@ async function automateGit() {
     }
 
     const currentBranch = await runCommand('git branch --show-current');
+    const remote = await getAuthenticatedRemote();
     await runCommand(
-      `git push origin ${currentBranch}`,
-      `Empujado a ${currentBranch}`,
+      `git push ${remote} ${currentBranch}`,
+      `Empujado a branch ${currentBranch}`,
     );
   } catch (error) {
     console.error(`[ERROR]: Fallo en automateGit: ${error}`);
